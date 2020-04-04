@@ -7,7 +7,7 @@ if (RunService.IsStudio() && RunService.IsClient()) {
 	error("Attempt to require ServerSignalSender from client");
 }
 
-export class ServerSignalSender<T extends NetworkedEventCallback> implements IServerSignalSender<T> {
+export class ServerSignalSender<T extends NetworkedEventCallback = () => void> implements IServerSignalSender<T> {
 	private readonly remoteEvent: RemoteEvent;
 
 	/**

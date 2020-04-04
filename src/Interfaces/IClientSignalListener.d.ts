@@ -6,7 +6,7 @@ import { PrependPlayerArgToFunc } from "../Types/PrependPlayerArgToFunc";
 /**
  * Defines the interface for listening to remote signals sent from a client
  */
-export interface IClientSignalListener<T extends NetworkedEventCallback> extends IDestroyable {
+export interface IClientSignalListener<T extends NetworkedEventCallback = () => void> extends IDestroyable {
 	/**
 	 * Connects to remote signals sent from a client
 	 * @param callback The callback function that is used when a signal is received

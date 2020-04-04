@@ -11,7 +11,7 @@ if (IS_STUDIO && RunService.IsServer()) {
 	error("Attempt to require ServerSignalListener from server");
 }
 
-export class ServerSignalListener<T extends NetworkedEventCallback> implements IServerSignalListener<T> {
+export class ServerSignalListener<T extends NetworkedEventCallback = () => void> implements IServerSignalListener<T> {
 	private readonly tChecks: ArgumentsTupleCheck<T>;
 	private readonly shouldCheckInboundArgumentTypes: boolean;
 

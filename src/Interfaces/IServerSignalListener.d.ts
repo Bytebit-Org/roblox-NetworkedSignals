@@ -4,7 +4,7 @@ import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
 /**
  * Defines the interface for listening to remote signals sent from the server
  */
-export interface IServerSignalListener<T extends NetworkedEventCallback> extends IDestroyable {
+export interface IServerSignalListener<T extends NetworkedEventCallback = () => void> extends IDestroyable {
 	/**
 	 * Connects to remote signals sent from the server
 	 * @param callback The callback function that is used when a signal is received

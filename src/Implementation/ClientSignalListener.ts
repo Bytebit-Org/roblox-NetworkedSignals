@@ -12,7 +12,7 @@ if (IS_STUDIO && RunService.IsClient()) {
 	error("Attempt to require ClientSignalListener from server");
 }
 
-export class ClientSignalListener<T extends NetworkedEventCallback> implements IClientSignalListener<T> {
+export class ClientSignalListener<T extends NetworkedEventCallback = () => void> implements IClientSignalListener<T> {
 	private readonly tChecks: ArgumentsTupleCheck<T>;
 
 	private readonly remoteEvent: RemoteEvent;

@@ -4,7 +4,7 @@ import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
 /**
  * Defines the interface for firing remote signals from the server to clients
  */
-export interface IServerSignalSender<T extends NetworkedEventCallback> extends IDestroyable {
+export interface IServerSignalSender<T extends NetworkedEventCallback = () => void> extends IDestroyable {
 	/**
 	 * Fires a signal from the server to a specified client
 	 * @param player The player whose client will receive the signal
