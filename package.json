@@ -22,5 +22,10 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-roblox-ts": "0.0.7",
     "prettier": "^1.19.1"
+  },
+  "dependencies": {
+    "@rbxts/dumpster": "^1.0.8",
+    "@rbxts/signals-tooling": "^1.0.2",
+    "@rbxts/t": "^1.2.9"
   }
 }
