@@ -1,6 +1,6 @@
 {
   "name": "@rbxts/networked-events",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A TypeScript wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game.",
   "main": "out/init.lua",
   "scripts": {
