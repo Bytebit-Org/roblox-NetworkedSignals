@@ -7,7 +7,7 @@ import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIs
 
 const IS_STUDIO = RunService.IsStudio();
 
-if (IS_STUDIO && RunService.IsServer()) {
+if (IS_STUDIO && !RunService.IsClient()) {
 	error("Attempt to require ServerSignalListener from server");
 }
 

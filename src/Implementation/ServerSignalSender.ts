@@ -3,7 +3,7 @@ import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
 import { IServerSignalSender } from "../Interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
 
-if (RunService.IsStudio() && RunService.IsClient()) {
+if (RunService.IsStudio() && !RunService.IsServer()) {
 	error("Attempt to require ServerSignalSender from client");
 }
 

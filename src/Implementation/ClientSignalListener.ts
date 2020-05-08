@@ -8,8 +8,8 @@ import { PrependPlayerArgToFunc } from "../Types/PrependPlayerArgToFunc";
 
 const IS_STUDIO = RunService.IsStudio();
 
-if (IS_STUDIO && RunService.IsClient()) {
-	error("Attempt to require ClientSignalListener from server");
+if (IS_STUDIO && !RunService.IsServer()) {
+	error("Attempt to require ClientSignalListener from client");
 }
 
 export class ClientSignalListener<T extends NetworkedEventCallback = () => void> implements IClientSignalListener<T> {

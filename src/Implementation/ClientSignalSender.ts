@@ -4,7 +4,7 @@ import { IClientSignalSender } from "../Interfaces/IClientSignalSender";
 import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
 import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIsA";
 
-if (RunService.IsStudio() && RunService.IsServer()) {
+if (RunService.IsStudio() && !RunService.IsClient()) {
 	error("Attempt to require ClientSignalSender from server");
 }
 
