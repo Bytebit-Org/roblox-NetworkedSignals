@@ -23,12 +23,12 @@ export interface IServerSignalSender<T extends NetworkedEventCallback = () => vo
 	 * @param playersWhitelist The list of players whose clients will receive the signal
 	 * @param args The arguments to send with the signal
 	 */
-	fireToWhitelist(playersWhitelist: Array<Player>, ...args: FunctionArguments<T>): void;
+	fireToWhitelist(playersWhitelist: ReadonlyArray<Player>, ...args: FunctionArguments<T>): void;
 
 	/**
 	 * Fires a signal from the server to all existing clients except those listed
 	 * @param playersBlacklist The list of players whose clients will not receive the signal
 	 * @param args The arguments to send with the signal
 	 */
-	fireToOthers(playersBlacklist: Array<Player>, ...args: FunctionArguments<T>): void;
+	fireToOthers(playersBlacklist: ReadonlyArray<Player>, ...args: FunctionArguments<T>): void;
 }

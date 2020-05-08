@@ -50,11 +50,11 @@ export class ServerSignalSender<T extends NetworkedEventCallback = () => void> i
 		this.remoteEvent.FireAllClients(...args);
 	}
 
-	public fireToWhitelist(playersWhitelist: Array<Player>, ...args: FunctionArguments<T>) {
+	public fireToWhitelist(playersWhitelist: ReadonlyArray<Player>, ...args: FunctionArguments<T>) {
 		playersWhitelist.forEach(player => this.remoteEvent.FireClient(player, ...args));
 	}
 
-	public fireToOthers(playersBlacklist: Array<Player>, ...args: FunctionArguments<T>) {
+	public fireToOthers(playersBlacklist: ReadonlyArray<Player>, ...args: FunctionArguments<T>) {
 		const playersBlacklistSet = new Set(playersBlacklist);
 		Players.GetPlayers()
 			.filter(player => !playersBlacklistSet.has(player))
