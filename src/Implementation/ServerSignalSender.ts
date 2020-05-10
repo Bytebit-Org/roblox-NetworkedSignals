@@ -4,7 +4,7 @@ import { IServerSignalSender } from "../Interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
 
 if (RunService.IsStudio() && !RunService.IsServer()) {
-	error("Attempt to require ServerSignalSender from client");
+	warn("Attempt to require ServerSignalSender from client");
 }
 
 export class ServerSignalSender<T extends NetworkedEventCallback = () => void> implements IServerSignalSender<T> {

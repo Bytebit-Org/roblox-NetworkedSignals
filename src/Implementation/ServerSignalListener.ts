@@ -8,7 +8,7 @@ import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIs
 const IS_STUDIO = RunService.IsStudio();
 
 if (IS_STUDIO && !RunService.IsClient()) {
-	error("Attempt to require ServerSignalListener from server");
+	warn("Attempt to require ServerSignalListener from server");
 }
 
 export class ServerSignalListener<T extends NetworkedEventCallback = () => void> implements IServerSignalListener<T> {

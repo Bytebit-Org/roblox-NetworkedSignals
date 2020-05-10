@@ -5,7 +5,7 @@ import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription"
 import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIsA";
 
 if (RunService.IsStudio() && !RunService.IsClient()) {
-	error("Attempt to require ClientSignalSender from server");
+	warn("Attempt to require ClientSignalSender from server");
 }
 
 export class ClientSignalSender<T extends NetworkedEventCallback = () => void> implements IClientSignalSender<T> {
