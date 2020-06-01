@@ -91,7 +91,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 	}
 
 	private shouldDoTypeCheckOnArguments() {
-		return !IS_STUDIO && !this.shouldCheckInboundArgumentTypes;
+		return !this.shouldCheckInboundArgumentTypes;
 	}
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
