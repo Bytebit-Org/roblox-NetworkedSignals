@@ -107,7 +107,7 @@ export class ClientSignalListener<T extends NetworkedEventCallback = () => void>
 			return false;
 		}
 
-		for (let i = 0; i < args.size(); i++) {
+		for (let i = 0; i < args.size() - 1; i++) {
 			// +1 for player arg
 			if (!this.tChecks[i](args[i + 1])) {
 				if (IS_STUDIO) {
