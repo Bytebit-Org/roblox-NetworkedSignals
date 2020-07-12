@@ -4,10 +4,6 @@ import { IClientSignalSender } from "../Interfaces/IClientSignalSender";
 import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
 import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIsA";
 
-if (RunService.IsStudio() && !RunService.IsClient()) {
-	warn("Attempt to require ClientSignalSender from server");
-}
-
 export class ClientSignalSender<T extends NetworkedEventCallback = () => void> implements IClientSignalSender<T> {
 	private remoteEvent?: RemoteEvent;
 
@@ -15,6 +11,10 @@ export class ClientSignalSender<T extends NetworkedEventCallback = () => void> i
 	 * Use create method instead!
 	 */
 	private constructor(parent: Instance, description: NetworkedSignalDescription<T>) {
+		if (!RunService.IsClient()) {
+			throw "Attempt to create a ClientSignalSender from server";
+		}
+
 		this.remoteEvent = waitForNamedChildWhichIsA(parent, description.name, "RemoteEvent");
 	}
 

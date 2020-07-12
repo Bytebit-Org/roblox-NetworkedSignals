@@ -3,10 +3,6 @@ import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
 import { IServerSignalSender } from "../Interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
 
-if (RunService.IsStudio() && !RunService.IsServer()) {
-	warn("Attempt to require ServerSignalSender from client");
-}
-
 export class ServerSignalSender<T extends NetworkedEventCallback = () => void> implements IServerSignalSender<T> {
 	private readonly remoteEvent: RemoteEvent;
 
@@ -14,6 +10,10 @@ export class ServerSignalSender<T extends NetworkedEventCallback = () => void> i
 	 * Use create method instead!
 	 */
 	private constructor(parent: Instance, description: NetworkedSignalDescription<T>) {
+		if (!RunService.IsServer()) {
+			throw "Attempt to create a ServerSignalSender from client";
+		}
+
 		const remoteEventCandidate = parent.FindFirstChild(description.name);
 		if (remoteEventCandidate !== undefined && remoteEventCandidate.IsA("RemoteEvent")) {
 			this.remoteEvent = remoteEventCandidate;

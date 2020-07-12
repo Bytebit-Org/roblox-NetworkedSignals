@@ -8,10 +8,6 @@ import { PrependPlayerArgToFunc } from "../Types/PrependPlayerArgToFunc";
 
 const IS_STUDIO = RunService.IsStudio();
 
-if (IS_STUDIO && !RunService.IsServer()) {
-	warn("Attempt to require ClientSignalListener from client");
-}
-
 export class ClientSignalListener<T extends NetworkedEventCallback = () => void> implements IClientSignalListener<T> {
 	private readonly tChecks: ArgumentsTupleCheck<T>;
 
@@ -21,6 +17,10 @@ export class ClientSignalListener<T extends NetworkedEventCallback = () => void>
 	 * Use create method instead!
 	 */
 	private constructor(parent: Instance, description: NetworkedSignalDescription<T>) {
+		if (!RunService.IsServer()) {
+			throw "Attempt to create a ClientSignalListener from client";
+		}
+
 		this.tChecks = description.tChecks;
 
 		const remoteEventCandidate = parent.FindFirstChild(description.name);

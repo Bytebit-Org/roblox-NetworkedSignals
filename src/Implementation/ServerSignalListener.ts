@@ -7,10 +7,6 @@ import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIs
 
 const IS_STUDIO = RunService.IsStudio();
 
-if (IS_STUDIO && !RunService.IsClient()) {
-	warn("Attempt to require ServerSignalListener from server");
-}
-
 export class ServerSignalListener<T extends NetworkedEventCallback = () => void> implements IServerSignalListener<T> {
 	private readonly tChecks: ArgumentsTupleCheck<T>;
 	private readonly shouldCheckInboundArgumentTypes: boolean;
@@ -25,6 +21,10 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 		description: NetworkedSignalDescription<T>,
 		shouldCheckInboundArgumentTypes?: boolean,
 	) {
+		if (!RunService.IsClient()) {
+			throw "Attempt to create a ServerSignalListener from server";
+		}
+
 		this.tChecks = description.tChecks;
 		this.shouldCheckInboundArgumentTypes =
 			shouldCheckInboundArgumentTypes !== undefined ? shouldCheckInboundArgumentTypes : false;
