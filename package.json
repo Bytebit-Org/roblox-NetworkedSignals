@@ -4,7 +4,7 @@
   "description": "A TypeScript wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game.",
   "main": "out/init.lua",
   "scripts": {
-    "prepublishOnly": "rbxtsc-dev"
+    "prepublishOnly": "rbxtsc"
   },
   "files": ["out"],
   "keywords": [],
