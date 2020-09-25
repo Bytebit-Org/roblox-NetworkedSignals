@@ -8,6 +8,7 @@ import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIs
 const IS_STUDIO = RunService.IsStudio();
 
 export class ServerSignalListener<T extends NetworkedEventCallback = () => void> implements IServerSignalListener<T> {
+	private readonly minNumberOfArguments: number;
 	private readonly tChecks: ArgumentsTupleCheck<T>;
 	private readonly shouldCheckInboundArgumentTypes: boolean;
 
@@ -28,6 +29,12 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 		this.tChecks = description.tChecks;
 		this.shouldCheckInboundArgumentTypes =
 			shouldCheckInboundArgumentTypes !== undefined ? shouldCheckInboundArgumentTypes : false;
+
+		let numberOfRequiredArguments = this.tChecks.size();
+		while (numberOfRequiredArguments > 0 && this.tChecks[numberOfRequiredArguments - 1](undefined)) {
+			numberOfRequiredArguments--;
+		}
+		this.minNumberOfArguments = numberOfRequiredArguments;
 
 		this.remoteEvent = waitForNamedChildWhichIsA(parent, description.name, "RemoteEvent");
 	}
@@ -95,10 +102,15 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 	}
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
-		if (args.size() !== this.tChecks.size()) {
+		const numberOfArgumentsProvided = args.size();
+		if (this.minNumberOfArguments < numberOfArgumentsProvided || numberOfArgumentsProvided > this.tChecks.size()) {
 			if (IS_STUDIO) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				error(`Invalid number of arguments passed to client signal ${this.remoteEvent!.Name}`);
+				error(
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					`Invalid number of arguments passed to server signal ${this.remoteEvent!.Name}. Expected at least ${
+						this.minNumberOfArguments
+					} and at most ${this.tChecks.size()}, got ${numberOfArgumentsProvided}.`,
+				);
 			}
 			return false;
 		}
@@ -107,7 +119,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 			if (!this.tChecks[i](args[i])) {
 				if (IS_STUDIO) {
 					error(
-						`Argument ${i} does not pass type check for client signal ${
+						`Argument ${i} does not pass type check for server signal ${
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							this.remoteEvent!.Name
 						} - given value: ${args[i]}`,

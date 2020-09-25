@@ -9,9 +9,9 @@ import { PrependPlayerArgToFunc } from "../Types/PrependPlayerArgToFunc";
 const IS_STUDIO = RunService.IsStudio();
 
 export class ClientSignalListener<T extends NetworkedEventCallback = () => void> implements IClientSignalListener<T> {
-	private readonly tChecks: ArgumentsTupleCheck<T>;
-
+	private readonly minNumberOfArguments: number;
 	private readonly remoteEvent: RemoteEvent;
+	private readonly tChecks: ArgumentsTupleCheck<T>;
 
 	/**
 	 * Use create method instead!
@@ -22,6 +22,12 @@ export class ClientSignalListener<T extends NetworkedEventCallback = () => void>
 		}
 
 		this.tChecks = description.tChecks;
+
+		let numberOfRequiredArguments = this.tChecks.size();
+		while (numberOfRequiredArguments > 0 && this.tChecks[numberOfRequiredArguments - 1](undefined)) {
+			numberOfRequiredArguments--;
+		}
+		this.minNumberOfArguments = numberOfRequiredArguments;
 
 		const remoteEventCandidate = parent.FindFirstChild(description.name);
 		if (remoteEventCandidate !== undefined && remoteEventCandidate.IsA("RemoteEvent")) {
@@ -71,14 +77,19 @@ export class ClientSignalListener<T extends NetworkedEventCallback = () => void>
 	}
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
-		if (args.size() !== this.tChecks.size()) {
+		const numberOfArgumentsProvided = args.size();
+		if (this.minNumberOfArguments < numberOfArgumentsProvided || numberOfArgumentsProvided > this.tChecks.size()) {
 			if (IS_STUDIO) {
-				error(`Invalid number of arguments passed to client signal ${this.remoteEvent.Name}`);
+				error(
+					`Invalid number of arguments passed to client signal ${this.remoteEvent.Name}. Expected at least ${
+						this.minNumberOfArguments
+					} and at most ${this.tChecks.size()}, got ${numberOfArgumentsProvided}.`,
+				);
 			}
 			return false;
 		}
 
-		for (let i = 0; i < args.size(); i++) {
+		for (let i = 0; i < numberOfArgumentsProvided; i++) {
 			if (!this.tChecks[i](args[i])) {
 				if (IS_STUDIO) {
 					error(
