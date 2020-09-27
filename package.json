@@ -4,22 +4,24 @@
   "description": "A TypeScript wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game.",
   "main": "out/init.lua",
   "scripts": {
-    "prepublishOnly": "rbxtsc"
+    "prepublishOnly": "rbxtsc-dev --type=package"
   },
-  "files": ["out"],
+  "files": [
+    "out"
+  ],
   "keywords": [],
   "author": "Bytebit",
   "license": "ISC",
   "publishConfig": {
-	"access": "public"
+    "access": "public"
   },
   "repository": {
-	"type": "git",
-	"url": "git+https://github.com/Bytebit-Org/roblox-NetworkedEvents.git"
+    "type": "git",
+    "url": "git+https://github.com/Bytebit-Org/roblox-NetworkedEvents.git"
   },
   "types": "out/index.d.ts",
   "devDependencies": {
-    "@rbxts/types": "^1.0.350",
+    "@rbxts/types": "^1.0.398",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
     "eslint": "^6.8.0",
