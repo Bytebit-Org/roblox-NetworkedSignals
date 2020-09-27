@@ -78,7 +78,7 @@ export class ClientSignalListener<T extends NetworkedEventCallback = () => void>
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
 		const numberOfArgumentsProvided = args.size();
-		if (this.minNumberOfArguments < numberOfArgumentsProvided || numberOfArgumentsProvided > this.tChecks.size()) {
+		if (this.tChecks.size() < numberOfArgumentsProvided || numberOfArgumentsProvided < this.minNumberOfArguments) {
 			if (IS_STUDIO) {
 				error(
 					`Invalid number of arguments passed to client signal ${this.remoteEvent.Name}. Expected at least ${

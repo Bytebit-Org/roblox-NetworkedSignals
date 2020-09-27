@@ -103,7 +103,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
 		const numberOfArgumentsProvided = args.size();
-		if (this.minNumberOfArguments < numberOfArgumentsProvided || numberOfArgumentsProvided > this.tChecks.size()) {
+		if (this.tChecks.size() < numberOfArgumentsProvided || numberOfArgumentsProvided < this.minNumberOfArguments) {
 			if (IS_STUDIO) {
 				error(
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
