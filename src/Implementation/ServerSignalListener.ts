@@ -27,8 +27,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 		}
 
 		this.tChecks = description.tChecks;
-		this.shouldCheckInboundArgumentTypes =
-			shouldCheckInboundArgumentTypes !== undefined ? shouldCheckInboundArgumentTypes : false;
+		this.shouldCheckInboundArgumentTypes = shouldCheckInboundArgumentTypes ?? true;
 
 		let numberOfRequiredArguments = this.tChecks.size();
 		while (numberOfRequiredArguments > 0 && this.tChecks[numberOfRequiredArguments - 1](undefined)) {
@@ -43,7 +42,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 	 * Instantiates a new ServerSignalListener
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
-	 * @param shouldCheckInboundArgumentTypes An optional parameter that describes whether all arguments should be type checked. Defaults to false.
+	 * @param shouldCheckInboundArgumentTypes An optional parameter that describes whether all arguments should be type checked. Defaults to true.
 	 */
 	public static create<T extends NetworkedEventCallback>(
 		parent: Instance,
@@ -83,9 +82,9 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 	}
 
 	private areArgumentsValid(args: Array<unknown>): args is FunctionArguments<T> {
-		// Yes, this is basically just a type assertion for TypeScript if shouldDoTypeCheckOnArguments() returns false
+		// Yes, this is basically just a type assertion for TypeScript if this.shouldCheckInboundArgumentTypes is false
 		// That's okay - this is client side and is checking arguments from the server, so it should be safe
-		if (!this.shouldDoTypeCheckOnArguments() || this.doArgumentsSatisfyChecks(args)) {
+		if (!this.shouldCheckInboundArgumentTypes || this.doArgumentsSatisfyChecks(args)) {
 			return true;
 		}
 
@@ -95,10 +94,6 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 		}
 
 		return false;
-	}
-
-	private shouldDoTypeCheckOnArguments() {
-		return !this.shouldCheckInboundArgumentTypes;
 	}
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
