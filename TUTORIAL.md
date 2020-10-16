@@ -38,20 +38,20 @@ In order to provide easier type safety, it is nice to be able to keep a central 
 <details><summary>Using roblox-ts</summary><p>
 
 ```ts
-	import type { NetworkedSignalDescription } from "@rbxts/networked-signals";
+import type { NetworkedSignalDescription } from "@rbxts/networked-signals";
 
-	export const NetworkedSignalDescriptions = {
-		Voted: identity<NetworkedSignalDescription<(mapName: string) => void>({
-			clientSignalListenerMiddleware: [], // Could add some middleware functions here for when the client sends a signal to the server
-			name: "VotedForMap",
-			typeChecks: [t.string],
-		}),
-		VoteForMapRequested: identity<NetworkedSignalDescription>({
-			name: "VoteForMapRequested",
-			serverSignalListenerMiddleware: [], // Could add some middleware functions here for when the server sends a signal to the client
-			typeChecks: [],
-		}),
-	};
+export const NetworkedSignalDescriptions = {
+	Voted: identity<NetworkedSignalDescription<(mapName: string) => void>({
+		clientSignalListenerMiddleware: [], // Could add some middleware functions here for when the client sends a signal to the server
+		name: "VotedForMap",
+		typeChecks: [t.string],
+	}),
+	VoteForMapRequested: identity<NetworkedSignalDescription>({
+		name: "VoteForMapRequested",
+		serverSignalListenerMiddleware: [], // Could add some middleware functions here for when the server sends a signal to the client
+		typeChecks: [],
+	}),
+};
 ```
 
 </p></details>
@@ -59,19 +59,19 @@ In order to provide easier type safety, it is nice to be able to keep a central 
 <details><summary>Using Lua / Luau</summary><p>
 
 ```lua
-	-- Run this as a ModuleScript
-	return {
-		VotedForMap = {
-			clientSignalListenerMiddleware = {}, -- Could add some middleware functions here for when the client sends a signal to the server
-			name = "VotedForMap",
-			typeChecks = {t.string},
-		},
-		VoteForMapRequested = {
-			name = "VoteForMapRequested",
-			serverSignalListenerMiddleware = [], -- Could add some middleware functions here for when the server sends a signal to the client
-			typeChecks = {},
-		}),
-	}
+-- Run this as a ModuleScript
+return {
+	VotedForMap = {
+		clientSignalListenerMiddleware = {}, -- Could add some middleware functions here for when the client sends a signal to the server
+		name = "VotedForMap",
+		typeChecks = {t.string},
+	},
+	VoteForMapRequested = {
+		name = "VoteForMapRequested",
+		serverSignalListenerMiddleware = [], -- Could add some middleware functions here for when the server sends a signal to the client
+		typeChecks = {},
+	}),
+}
 ```
 
 </p></details>
@@ -82,20 +82,20 @@ The client-side is responsible for listening to signals from the server ("Server
 <details><summary>Using roblox-ts</summary><p>
 
 ```ts
-	import { ReplicatedStorage } from "@rbxts/services";
-	import type { ClientSignalSender, ServerSignalListener } from "@rbxts/networked-signals";
-	import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
+import { ReplicatedStorage } from "@rbxts/services";
+import type { ClientSignalSender, ServerSignalListener } from "@rbxts/networked-signals";
+import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
 
-	const votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-	const voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+const votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+const voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
-	mapVoteRequestedServerSignalListener.connect(() => {
-		// Show the options and let the player select one
-	});
+mapVoteRequestedServerSignalListener.connect(() => {
+	// Show the options and let the player select one
+});
 
-	function onVoteSelected(mapName: string) {
-		votedForMapClientSignalSender.fire(mapName);
-	}
+function onVoteSelected(mapName: string) {
+	votedForMapClientSignalSender.fire(mapName);
+}
 ```
 
 </p></details>
@@ -103,24 +103,24 @@ The client-side is responsible for listening to signals from the server ("Server
 <details><summary>Using Lua / Luau</summary><p>
 
 ```lua
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-	local networkedSignalsPackage = require(path.to.networked.signals.package)
-	local ClientSignalSender = networkedSignalsPackage.ClientSignalSender
-	local ServerSignalListener = networkedSignalsPackage.ServerSignalListener
+local networkedSignalsPackage = require(path.to.networked.signals.package)
+local ClientSignalSender = networkedSignalsPackage.ClientSignalSender
+local ServerSignalListener = networkedSignalsPackage.ServerSignalListener
 
-	local networkedSignalDescriptions = require(path.to.networked.signal.descriptions)
+local networkedSignalDescriptions = require(path.to.networked.signal.descriptions)
 
-	local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-	local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
-	mapVoteRequestedServerSignalListener:connect(function ()
-		-- Show the options and let the player select one
-	end);
+mapVoteRequestedServerSignalListener:connect(function ()
+	-- Show the options and let the player select one
+end);
 
-	function onVoteSelected(mapName) {
-		votedForMapClientSignalSender:fire(mapName);
-	}
+function onVoteSelected(mapName) {
+	votedForMapClientSignalSender:fire(mapName);
+}
 ```
 
 </p></details>
@@ -131,18 +131,18 @@ The server-side is responsible for listening to signals from the client ("Client
 <details><summary>Using roblox-ts</summary><p>
 
 ```ts
-	import { ReplicatedStorage } from "@rbxts/services";
-	import type { ClientSignalListener, ServerSignalSender } from "@rbxts/networked-signals";
-	import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
+import { ReplicatedStorage } from "@rbxts/services";
+import type { ClientSignalListener, ServerSignalSender } from "@rbxts/networked-signals";
+import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
 
-	const votedForMapClientSignalListener = ClientSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-	const voteForMapRequestedServerSignalSender = ServerSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+const votedForMapClientSignalListener = ClientSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+const voteForMapRequestedServerSignalSender = ServerSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
-	votedForMapClientSignalListener.connect((player, mapName) => {
-		// Handle the vote
-	});
+votedForMapClientSignalListener.connect((player, mapName) => {
+	// Handle the vote
+});
 
-	voteForMapRequestedServerSignalSender.fireToAll();
+voteForMapRequestedServerSignalSender.fireToAll();
 ```
 
 </p></details>
@@ -150,22 +150,22 @@ The server-side is responsible for listening to signals from the client ("Client
 <details><summary>Using Lua / Luau</summary><p>
 
 ```lua
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-	local networkedSignalsPackage = require(path.to.networked.signals.package)
-	local ClientSignalListener = networkedSignalsPackage.ClientSignalListener
-	local ServerSignalSender = networkedSignalsPackage.ServerSignalSender
+local networkedSignalsPackage = require(path.to.networked.signals.package)
+local ClientSignalListener = networkedSignalsPackage.ClientSignalListener
+local ServerSignalSender = networkedSignalsPackage.ServerSignalSender
 
-	local networkedSignalDescriptions = require(path.to.networked.signal.descriptions)
+local networkedSignalDescriptions = require(path.to.networked.signal.descriptions)
 
-	local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-	local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
-	votedForMapClientSignalListener:connect(function (player, mapName)
-		// Handle the vote
-	end);
+votedForMapClientSignalListener:connect(function (player, mapName)
+	// Handle the vote
+end);
 
-	voteForMapRequestedServerSignalSender:fireToAll();
+voteForMapRequestedServerSignalSender:fireToAll();
 ```
 
 </p></details>
