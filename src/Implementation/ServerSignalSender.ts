@@ -2,6 +2,7 @@ import { Players, RunService } from "@rbxts/services";
 import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 import { IServerSignalSender } from "../interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
+import { InstanceFactory } from "factories/InstanceFactory";
 
 export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> implements IServerSignalSender<T> {
 	private readonly remoteEvent: RemoteEvent;
@@ -9,7 +10,11 @@ export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> 
 	/**
 	 * Use create method instead!
 	 */
-	private constructor(parent: Instance, description: NetworkedSignalDescription<T>) {
+	private constructor(
+		description: NetworkedSignalDescription<T>,
+		instanceFactory: InstanceFactory,
+		parent: Instance,
+	) {
 		if (!RunService.IsServer()) {
 			throw "Attempt to create a ServerSignalSender from client";
 		}
@@ -18,7 +23,7 @@ export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> 
 		if (remoteEventCandidate !== undefined && remoteEventCandidate.IsA("RemoteEvent")) {
 			this.remoteEvent = remoteEventCandidate;
 		} else {
-			const newRemoteEvent = new Instance("RemoteEvent");
+			const newRemoteEvent = instanceFactory.createInstance("RemoteEvent");
 			newRemoteEvent.Name = description.name;
 			newRemoteEvent.Parent = parent;
 
@@ -35,7 +40,7 @@ export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> 
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IServerSignalSender<T> {
-		return new ServerSignalSender(parent, description);
+		return new ServerSignalSender(description, new InstanceFactory(), parent);
 	}
 
 	public destroy() {

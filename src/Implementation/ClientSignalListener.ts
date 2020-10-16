@@ -7,6 +7,7 @@ import t from "@rbxts/t";
 import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
 import { checkMiddlewareFuncsAsync } from "functions/checkMiddlewareFuncsAsync";
 import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
+import { InstanceFactory } from "factories/InstanceFactory";
 
 const IS_STUDIO = RunService.IsStudio();
 
@@ -20,7 +21,11 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 	/**
 	 * Use create method instead!
 	 */
-	private constructor(parent: Instance, description: NetworkedSignalDescription<T>) {
+	private constructor(
+		description: NetworkedSignalDescription<T>,
+		instanceFactory: InstanceFactory,
+		parent: Instance,
+	) {
 		if (!RunService.IsServer()) {
 			throw "Attempt to create a ClientSignalListener from client";
 		}
@@ -39,7 +44,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		if (remoteEventCandidate !== undefined && remoteEventCandidate.IsA("RemoteEvent")) {
 			this.remoteEvent = remoteEventCandidate;
 		} else {
-			const newRemoteEvent = new Instance("RemoteEvent");
+			const newRemoteEvent = instanceFactory.createInstance("RemoteEvent");
 			newRemoteEvent.Name = description.name;
 			newRemoteEvent.Parent = parent;
 
@@ -56,7 +61,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IClientSignalListener<T> {
-		return new ClientSignalListener(parent, description);
+		return new ClientSignalListener(description, new InstanceFactory(), parent);
 	}
 
 	public connect(callback: PrependPlayerArgToFunc<T>): RBXScriptConnection {
