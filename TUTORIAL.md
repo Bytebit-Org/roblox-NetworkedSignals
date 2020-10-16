@@ -41,16 +41,16 @@ In order to provide easier type safety, it is nice to be able to keep a central 
 import type { NetworkedSignalDescription } from "@rbxts/networked-signals";
 
 export const NetworkedSignalDescriptions = {
-	Voted: identity<NetworkedSignalDescription<(mapName: string) => void>({
-		clientSignalListenerMiddleware: [], // Could add some middleware functions here for when the client sends a signal to the server
-		name: "VotedForMap",
-		typeChecks: [t.string],
-	}),
-	VoteForMapRequested: identity<NetworkedSignalDescription>({
-		name: "VoteForMapRequested",
-		serverSignalListenerMiddleware: [], // Could add some middleware functions here for when the server sends a signal to the client
-		typeChecks: [],
-	}),
+    Voted: identity<NetworkedSignalDescription<(mapName: string) => void>({
+        clientSignalListenerMiddleware: [], // Could add some middleware functions here for when the client sends a signal to the server
+        name: "VotedForMap",
+        typeChecks: [t.string],
+    }),
+    VoteForMapRequested: identity<NetworkedSignalDescription>({
+        name: "VoteForMapRequested",
+        serverSignalListenerMiddleware: [], // Could add some middleware functions here for when the server sends a signal to the client
+        typeChecks: [],
+    }),
 };
 ```
 
@@ -61,16 +61,16 @@ export const NetworkedSignalDescriptions = {
 ```lua
 -- Run this as a ModuleScript
 return {
-	VotedForMap = {
-		clientSignalListenerMiddleware = {}, -- Could add some middleware functions here for when the client sends a signal to the server
-		name = "VotedForMap",
-		typeChecks = {t.string},
-	},
-	VoteForMapRequested = {
-		name = "VoteForMapRequested",
-		serverSignalListenerMiddleware = [], -- Could add some middleware functions here for when the server sends a signal to the client
-		typeChecks = {},
-	}),
+    VotedForMap = {
+        clientSignalListenerMiddleware = {}, -- Could add some middleware functions here for when the client sends a signal to the server
+        name = "VotedForMap",
+        typeChecks = {t.string},
+    },
+    VoteForMapRequested = {
+        name = "VoteForMapRequested",
+        serverSignalListenerMiddleware = [], -- Could add some middleware functions here for when the server sends a signal to the client
+        typeChecks = {},
+    }),
 }
 ```
 
@@ -90,11 +90,11 @@ const votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorag
 const voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 mapVoteRequestedServerSignalListener.connect(() => {
-	// Show the options and let the player select one
+    // Show the options and let the player select one
 });
 
 function onVoteSelected(mapName: string) {
-	votedForMapClientSignalSender.fire(mapName);
+    votedForMapClientSignalSender.fire(mapName);
 }
 ```
 
@@ -115,11 +115,11 @@ local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorag
 local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 mapVoteRequestedServerSignalListener:connect(function ()
-	-- Show the options and let the player select one
+    -- Show the options and let the player select one
 end);
 
 function onVoteSelected(mapName) {
-	votedForMapClientSignalSender:fire(mapName);
+    votedForMapClientSignalSender:fire(mapName);
 }
 ```
 
@@ -139,7 +139,7 @@ const votedForMapClientSignalListener = ClientSignalListener.create(ReplicatedSt
 const voteForMapRequestedServerSignalSender = ServerSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 votedForMapClientSignalListener.connect((player, mapName) => {
-	// Handle the vote
+    // Handle the vote
 });
 
 voteForMapRequestedServerSignalSender.fireToAll();
@@ -162,7 +162,7 @@ local votedForMapClientSignalSender = ClientSignalSender.create(ReplicatedStorag
 local voteForMapRequestedServerSignalListener = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 votedForMapClientSignalListener:connect(function (player, mapName)
-	// Handle the vote
+    // Handle the vote
 end);
 
 voteForMapRequestedServerSignalSender:fireToAll();
