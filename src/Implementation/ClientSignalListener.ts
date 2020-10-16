@@ -16,7 +16,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 	private readonly minNumberOfArguments: number;
 	private readonly name: string;
 	private readonly remoteEvent: RemoteEvent;
-	private readonly tChecks: ArgumentsTupleTypesCheck<T>;
+	private readonly typeChecks: ArgumentsTupleTypesCheck<T>;
 
 	/**
 	 * Use create method instead!
@@ -32,10 +32,10 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 
 		this.middlewareFuncs = description.clientSignalListenerMiddleware;
 		this.name = description.name;
-		this.tChecks = description.typeChecks;
+		this.typeChecks = description.typeChecks;
 
-		let numberOfRequiredArguments = this.tChecks.size();
-		while (numberOfRequiredArguments > 0 && this.tChecks[numberOfRequiredArguments - 1](undefined)) {
+		let numberOfRequiredArguments = this.typeChecks.size();
+		while (numberOfRequiredArguments > 0 && this.typeChecks[numberOfRequiredArguments - 1](undefined)) {
 			numberOfRequiredArguments--;
 		}
 		this.minNumberOfArguments = numberOfRequiredArguments;
@@ -104,19 +104,22 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 
 	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
 		const numberOfArgumentsProvided = args.size();
-		if (this.tChecks.size() < numberOfArgumentsProvided || numberOfArgumentsProvided < this.minNumberOfArguments) {
+		if (
+			this.typeChecks.size() < numberOfArgumentsProvided ||
+			numberOfArgumentsProvided < this.minNumberOfArguments
+		) {
 			if (IS_STUDIO) {
 				error(
 					`Invalid number of arguments passed to client signal ${this.name}. Expected at least ${
 						this.minNumberOfArguments
-					} and at most ${this.tChecks.size()}, got ${numberOfArgumentsProvided}.`,
+					} and at most ${this.typeChecks.size()}, got ${numberOfArgumentsProvided}.`,
 				);
 			}
 			return false;
 		}
 
 		for (let i = 0; i < numberOfArgumentsProvided; i++) {
-			if (!this.tChecks[i](args[i])) {
+			if (!this.typeChecks[i](args[i])) {
 				if (IS_STUDIO) {
 					error(
 						`Argument ${i} does not pass type check for client signal ${this.name} - given value: ${args[i]}`,
@@ -137,7 +140,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		}
 
 		// +1 for player arg
-		if (args.size() !== this.tChecks.size() + 1) {
+		if (args.size() !== this.typeChecks.size() + 1) {
 			if (IS_STUDIO) {
 				error(`Invalid number of arguments passed to client signal ${this.name}`);
 			}
@@ -146,7 +149,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 
 		for (let i = 0; i < args.size() - 1; i++) {
 			// +1 for player arg
-			if (!this.tChecks[i](args[i + 1])) {
+			if (!this.typeChecks[i](args[i + 1])) {
 				if (IS_STUDIO) {
 					error(
 						`Argument ${i} does not pass type check for client signal ${

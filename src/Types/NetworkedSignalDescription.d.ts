@@ -9,7 +9,7 @@ import {
 /**
  * Defines the description of a networked signal
  */
-export type NetworkedSignalDescription<T extends NetworkedSignalCallback> = {
+export type NetworkedSignalDescription<T extends NetworkedSignalCallback = () => void> = {
 	/** The optional set of middleware functions for signals fired from the client */
 	readonly clientSignalListenerMiddleware?: ReadonlyArray<MiddlewareFunc<ClientSignalListenerMiddlewarePayload<T>>>;
 
