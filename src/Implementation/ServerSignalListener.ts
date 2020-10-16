@@ -1,15 +1,19 @@
 import { RunService } from "@rbxts/services";
-import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
-import { ArgumentsTupleCheck } from "../Types/ArgumentsTupleCheck";
-import { IServerSignalListener } from "../Interfaces/IServerSignalListener";
-import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
-import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIsA";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
+import { ArgumentsTupleTypesCheck } from "../types/ArgumentsTupleTypesCheck";
+import { IServerSignalListener } from "../interfaces/IServerSignalListener";
+import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
+import { waitForNamedChildWhichIsA } from "../functions/WaitForNamedChildWhichIsA";
+import { MiddlewareFunc, ServerSignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
+import { checkMiddlewareFuncsAsync } from "functions/checkMiddlewareFuncsAsync";
 
 const IS_STUDIO = RunService.IsStudio();
 
-export class ServerSignalListener<T extends NetworkedEventCallback = () => void> implements IServerSignalListener<T> {
+export class ServerSignalListener<T extends NetworkedSignalCallback = () => void> implements IServerSignalListener<T> {
+	private readonly middlewareFuncs?: ReadonlyArray<MiddlewareFunc<ServerSignalListenerMiddlewarePayload<T>>>;
 	private readonly minNumberOfArguments: number;
-	private readonly tChecks: ArgumentsTupleCheck<T>;
+	private readonly name: string;
+	private readonly tChecks: ArgumentsTupleTypesCheck<T>;
 	private readonly shouldCheckInboundArgumentTypes: boolean;
 
 	private remoteEvent?: RemoteEvent;
@@ -26,7 +30,9 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 			throw "Attempt to create a ServerSignalListener from server";
 		}
 
-		this.tChecks = description.tChecks;
+		this.middlewareFuncs = description.serverSignalListenerMiddleware;
+		this.name = description.name;
+		this.tChecks = description.typeChecks;
 		this.shouldCheckInboundArgumentTypes = shouldCheckInboundArgumentTypes ?? true;
 
 		let numberOfRequiredArguments = this.tChecks.size();
@@ -44,7 +50,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 	 * @param description The description for the networked event
 	 * @param shouldCheckInboundArgumentTypes An optional parameter that describes whether all arguments should be type checked. Defaults to true.
 	 */
-	public static create<T extends NetworkedEventCallback>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 		shouldCheckInboundArgumentTypes?: boolean,
@@ -57,10 +63,26 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 			throw `Cannot connect to destroyed ServerSignalListener`;
 		}
 
-		return this.remoteEvent.OnClientEvent.Connect((...args: Array<unknown>) => {
-			if (this.areArgumentsValid(args)) {
-				callback(...args);
+		return this.remoteEvent.OnClientEvent.Connect(async (...args: Array<unknown>) => {
+			if (!this.areArgumentsValid(args)) {
+				if (IS_STUDIO) {
+					error(`Invalid arguments passed to server signal ${this.name}`);
+				}
+
+				return;
 			}
+
+			if (this.middlewareFuncs !== undefined) {
+				const payload: ServerSignalListenerMiddlewarePayload<T> = {
+					args: args,
+					signalName: this.name,
+				};
+				if (!(await checkMiddlewareFuncsAsync(payload, this.middlewareFuncs))) {
+					return;
+				}
+			}
+
+			callback(...args);
 		});
 	}
 
@@ -90,7 +112,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 
 		if (IS_STUDIO) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			error(`Invalid arguments passed to server signal ${this.remoteEvent!.Name}`);
+			error(`Invalid arguments passed to server signal '${this.name}'`);
 		}
 
 		return false;
@@ -102,7 +124,7 @@ export class ServerSignalListener<T extends NetworkedEventCallback = () => void>
 			if (IS_STUDIO) {
 				error(
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					`Invalid number of arguments passed to server signal ${this.remoteEvent!.Name}. Expected at least ${
+					`Invalid number of arguments passed to server signal '${this.name}'. Expected at least ${
 						this.minNumberOfArguments
 					} and at most ${this.tChecks.size()}, got ${numberOfArgumentsProvided}.`,
 				);

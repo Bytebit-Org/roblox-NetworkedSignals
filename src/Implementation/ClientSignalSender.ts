@@ -1,10 +1,10 @@
 import { RunService } from "@rbxts/services";
-import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
-import { IClientSignalSender } from "../Interfaces/IClientSignalSender";
-import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
-import { waitForNamedChildWhichIsA } from "../Functions/WaitForNamedChildWhichIsA";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
+import { IClientSignalSender } from "../interfaces/IClientSignalSender";
+import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
+import { waitForNamedChildWhichIsA } from "../functions/WaitForNamedChildWhichIsA";
 
-export class ClientSignalSender<T extends NetworkedEventCallback = () => void> implements IClientSignalSender<T> {
+export class ClientSignalSender<T extends NetworkedSignalCallback = () => void> implements IClientSignalSender<T> {
 	private remoteEvent?: RemoteEvent;
 
 	/**
@@ -23,7 +23,7 @@ export class ClientSignalSender<T extends NetworkedEventCallback = () => void> i
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
 	 */
-	public static create<T extends NetworkedEventCallback>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IClientSignalSender<T> {

@@ -1,10 +1,10 @@
 import { IDestroyable } from "@rbxts/dumpster";
-import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 
 /**
  * Defines the interface for listening to remote signals sent from the server
  */
-export interface IServerSignalListener<T extends NetworkedEventCallback = () => void> extends IDestroyable {
+export interface IServerSignalListener<T extends NetworkedSignalCallback = () => void> extends IDestroyable {
 	/**
 	 * Connects to remote signals sent from the server
 	 * @param callback The callback function that is used when a signal is received

@@ -1,14 +1,20 @@
 // Implementation
-export * from "./Implementation/ClientSignalListener";
-export * from "./Implementation/ClientSignalSender";
-export * from "./Implementation/ServerSignalListener";
-export * from "./Implementation/ServerSignalSender";
+export * from "./implementation/ClientSignalListener";
+export * from "./implementation/ClientSignalSender";
+export * from "./implementation/ServerSignalListener";
+export * from "./implementation/ServerSignalSender";
 
 // Interfaces
-export { IClientSignalListener } from "./Interfaces/IClientSignalListener";
-export { IClientSignalSender } from "./Interfaces/IClientSignalSender";
-export { IServerSignalListener } from "./Interfaces/IServerSignalListener";
-export { IServerSignalSender } from "./Interfaces/IServerSignalSender";
+export { IClientSignalListener } from "./interfaces/IClientSignalListener";
+export { IClientSignalSender } from "./interfaces/IClientSignalSender";
+export { IServerSignalListener } from "./interfaces/IServerSignalListener";
+export { IServerSignalSender } from "./interfaces/IServerSignalSender";
 
 // Types
-export { NetworkedSignalDescription } from "./Types/NetworkedSignalDescription";
+export {
+	SignalListenerMiddlewarePayload,
+	ClientSignalListenerMiddlewarePayload,
+	ServerSignalListenerMiddlewarePayload,
+	MiddlewareFunc,
+} from "./types/MiddlewareTypes";
+export { NetworkedSignalDescription } from "./types/NetworkedSignalDescription";

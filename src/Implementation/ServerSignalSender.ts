@@ -1,9 +1,9 @@
 import { Players, RunService } from "@rbxts/services";
-import { NetworkedEventCallback } from "../Types/NetworkedEventCallback";
-import { IServerSignalSender } from "../Interfaces/IServerSignalSender";
-import { NetworkedSignalDescription } from "../Types/NetworkedSignalDescription";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
+import { IServerSignalSender } from "../interfaces/IServerSignalSender";
+import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 
-export class ServerSignalSender<T extends NetworkedEventCallback = () => void> implements IServerSignalSender<T> {
+export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> implements IServerSignalSender<T> {
 	private readonly remoteEvent: RemoteEvent;
 
 	/**
@@ -31,7 +31,7 @@ export class ServerSignalSender<T extends NetworkedEventCallback = () => void> i
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
 	 */
-	public static create<T extends NetworkedEventCallback>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IServerSignalSender<T> {
