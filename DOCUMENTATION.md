@@ -25,7 +25,7 @@ This documentation is written using TypeScript syntax and assumes basic knowledg
 ## Types
 ### NetworkedSignalCallback
 ```ts
-type NetworkedSignalCallback = (...args: Array<unknown>) => void;
+type NetworkedSignalCallback = (...args: Array<any>) => void;
 ```
 Defines a callback function that helps define the arguments for a given signal.
 
