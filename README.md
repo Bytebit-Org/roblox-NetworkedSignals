@@ -9,4 +9,5 @@ If you already have roblox-ts set up, then just install this package to your pro
 This is currently not super simple, but this will be addressed in the future.
 
 ## Helpful Links
+- [Documentation](DOCUMENTATION.md)
 - [Tutorial](TUTORIAL.md)
