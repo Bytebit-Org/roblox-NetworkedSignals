@@ -1,5 +1,5 @@
-import { MiddlewareFunc, SignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
-import { NetworkedSignalCallback } from "types/NetworkedSignalCallback";
+import { MiddlewareFunc, SignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 
 export async function checkMiddlewareFuncsAsync<T extends SignalListenerMiddlewarePayload<NetworkedSignalCallback>>(
 	payload: T,

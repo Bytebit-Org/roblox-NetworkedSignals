@@ -5,10 +5,10 @@ import { ArgumentsTupleTypesCheck } from "../types/ArgumentsTupleTypesCheck";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 import t from "@rbxts/t";
 import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
-import { checkMiddlewareFuncsAsync } from "functions/checkMiddlewareFuncsAsync";
-import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
-import { InstanceFactory } from "factories/InstanceFactory";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
+import { checkMiddlewareFuncsAsync } from "../functions/checkMiddlewareFuncsAsync";
+import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
+import { InstanceFactory } from "../factories/InstanceFactory";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 const IS_STUDIO = RunService.IsStudio();
 

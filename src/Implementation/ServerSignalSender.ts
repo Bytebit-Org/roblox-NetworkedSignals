@@ -2,8 +2,8 @@ import { Players, RunService } from "@rbxts/services";
 import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 import { IServerSignalSender } from "../interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
-import { InstanceFactory } from "factories/InstanceFactory";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
+import { InstanceFactory } from "../factories/InstanceFactory";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 export class ServerSignalSender<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
 	implements IServerSignalSender<T> {

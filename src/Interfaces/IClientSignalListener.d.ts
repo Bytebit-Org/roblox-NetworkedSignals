@@ -1,9 +1,9 @@
 import { ISignalConnection } from "@rbxts/signals-tooling";
 import { IDestroyable } from "@rbxts/dumpster";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
-import { NetworkedSignalCallback } from "types/NetworkedSignalCallback";
-import { NetworkedSignalDescription } from "types/NetworkedSignalDescription";
-import { PrependPlayerArgToFunc } from "types/PrependPlayerArgToFunc";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
+import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
+import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
 
 /**
  * Defines the interface for listening to remote signals sent from a client

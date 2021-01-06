@@ -1,7 +1,7 @@
 import { IDestroyable } from "@rbxts/dumpster";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
-import { NetworkedSignalCallback } from "types/NetworkedSignalCallback";
-import { NetworkedSignalDescription } from "types/NetworkedSignalDescription";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
+import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
+import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 
 /**
  * Defines the interface for sending remote signals from the client to the server

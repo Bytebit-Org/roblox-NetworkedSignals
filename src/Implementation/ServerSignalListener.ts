@@ -4,9 +4,9 @@ import { ArgumentsTupleTypesCheck } from "../types/ArgumentsTupleTypesCheck";
 import { IServerSignalListener } from "../interfaces/IServerSignalListener";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 import { waitForNamedChildWhichIsA } from "../functions/WaitForNamedChildWhichIsA";
-import { MiddlewareFunc, ServerSignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
-import { checkMiddlewareFuncsAsync } from "functions/checkMiddlewareFuncsAsync";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
+import { MiddlewareFunc, ServerSignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
+import { checkMiddlewareFuncsAsync } from "../functions/checkMiddlewareFuncsAsync";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 const IS_STUDIO = RunService.IsStudio();
 

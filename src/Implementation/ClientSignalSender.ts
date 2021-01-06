@@ -3,7 +3,7 @@ import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 import { IClientSignalSender } from "../interfaces/IClientSignalSender";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 import { waitForNamedChildWhichIsA } from "../functions/WaitForNamedChildWhichIsA";
-import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
+import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 export class ClientSignalSender<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
 	implements IClientSignalSender<T> {
