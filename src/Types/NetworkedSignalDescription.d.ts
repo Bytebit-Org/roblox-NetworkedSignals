@@ -5,11 +5,12 @@ import {
 	ServerSignalListenerMiddlewarePayload,
 	MiddlewareFunc,
 } from "./MiddlewareTypes";
+import { GetNetworkedSignalCallbackType } from "./GetNetworkedSignalCallbackType";
 
 /**
  * Defines the description of a networked signal
  */
-export type NetworkedSignalDescription<T extends NetworkedSignalCallback = () => void> = {
+export type NetworkedSignalDescription<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void> = {
 	/** The optional set of middleware functions for signals fired from the client */
 	readonly clientSignalListenerMiddleware?: ReadonlyArray<MiddlewareFunc<ClientSignalListenerMiddlewarePayload<T>>>;
 
@@ -20,5 +21,5 @@ export type NetworkedSignalDescription<T extends NetworkedSignalCallback = () =>
 	readonly serverSignalListenerMiddleware?: ReadonlyArray<MiddlewareFunc<ServerSignalListenerMiddlewarePayload<T>>>;
 
 	/** The set of type checks to apply to signal arguments */
-	readonly typeChecks: ArgumentsTupleTypesCheck<T>;
+	readonly typeChecks: ArgumentsTupleTypesCheck<GetNetworkedSignalCallbackType<T>>;
 };

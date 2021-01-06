@@ -8,15 +8,17 @@ import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
 import { checkMiddlewareFuncsAsync } from "functions/checkMiddlewareFuncsAsync";
 import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "types/MiddlewareTypes";
 import { InstanceFactory } from "factories/InstanceFactory";
+import { GetNetworkedSignalCallbackType } from "types/GetNetworkedSignalCallbackType";
 
 const IS_STUDIO = RunService.IsStudio();
 
-export class ClientSignalListener<T extends NetworkedSignalCallback = () => void> implements IClientSignalListener<T> {
+export class ClientSignalListener<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
+	implements IClientSignalListener<T> {
 	private readonly middlewareFuncs?: ReadonlyArray<MiddlewareFunc<ClientSignalListenerMiddlewarePayload<T>>>;
 	private readonly minNumberOfArguments: number;
 	private readonly name: string;
 	private readonly remoteEvent: RemoteEvent;
-	private readonly typeChecks: ArgumentsTupleTypesCheck<T>;
+	private readonly typeChecks: ArgumentsTupleTypesCheck<GetNetworkedSignalCallbackType<T>>;
 
 	/**
 	 * Use create method instead!
@@ -57,14 +59,14 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
 	 */
-	public static create<T extends NetworkedSignalCallback>(
+	public static create<T extends NetworkedSignalCallback | NetworkedSignalDescription>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IClientSignalListener<T> {
 		return new ClientSignalListener(description, new InstanceFactory(), parent);
 	}
 
-	public connect(callback: PrependPlayerArgToFunc<T>): RBXScriptConnection {
+	public connect(callback: PrependPlayerArgToFunc<GetNetworkedSignalCallbackType<T>>) {
 		return this.remoteEvent.OnServerEvent.Connect(async (player: Player, ...args: Array<unknown>) => {
 			if (!this.doArgumentsSatisfyChecks(args)) {
 				if (IS_STUDIO) {
@@ -93,7 +95,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		this.remoteEvent.Destroy();
 	}
 
-	public wait(): FunctionArguments<PrependPlayerArgToFunc<T>> {
+	public wait() {
 		while (true) {
 			const waitResults = this.remoteEvent.OnServerEvent.Wait();
 			if (this.doArgumentsSatisfyChecksWithPlayerArg(waitResults)) {
@@ -102,7 +104,9 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		}
 	}
 
-	private doArgumentsSatisfyChecks(args: Array<unknown>): args is FunctionArguments<T> {
+	private doArgumentsSatisfyChecks(
+		args: Array<unknown>,
+	): args is FunctionArguments<GetNetworkedSignalCallbackType<T>> {
 		const numberOfArgumentsProvided = args.size();
 		if (
 			this.typeChecks.size() < numberOfArgumentsProvided ||
@@ -134,7 +138,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 
 	private doArgumentsSatisfyChecksWithPlayerArg(
 		args: Array<unknown>,
-	): args is FunctionArguments<PrependPlayerArgToFunc<T>> {
+	): args is FunctionArguments<PrependPlayerArgToFunc<GetNetworkedSignalCallbackType<T>>> {
 		if (!t.instanceIsA("Player")(args[0])) {
 			return false;
 		}

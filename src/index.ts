@@ -11,6 +11,7 @@ export { IServerSignalListener } from "./interfaces/IServerSignalListener";
 export { IServerSignalSender } from "./interfaces/IServerSignalSender";
 
 // Types
+export { GetNetworkedSignalCallbackType } from "./types/GetNetworkedSignalCallbackType";
 export {
 	SignalListenerMiddlewarePayload,
 	ClientSignalListenerMiddlewarePayload,
