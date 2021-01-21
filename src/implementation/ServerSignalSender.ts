@@ -3,17 +3,15 @@ import { NetworkedSignalCallback } from "../types/NetworkedSignalCallback";
 import { IServerSignalSender } from "../interfaces/IServerSignalSender";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 import { InstanceFactory } from "../factories/InstanceFactory";
-import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
-export class ServerSignalSender<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
-	implements IServerSignalSender<T> {
+export class ServerSignalSender<T extends NetworkedSignalCallback = () => void> implements IServerSignalSender<T> {
 	private readonly remoteEvent: RemoteEvent;
 
 	/**
 	 * Use create method instead!
 	 */
 	private constructor(
-		description: NetworkedSignalDescription<GetNetworkedSignalCallbackType<T>>,
+		description: NetworkedSignalDescription<T>,
 		instanceFactory: InstanceFactory,
 		parent: Instance,
 	) {
@@ -38,9 +36,9 @@ export class ServerSignalSender<T extends NetworkedSignalCallback | NetworkedSig
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
 	 */
-	public static create<T extends NetworkedSignalCallback | NetworkedSignalDescription>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
-		description: NetworkedSignalDescription<GetNetworkedSignalCallbackType<T>>,
+		description: NetworkedSignalDescription<T>,
 	): IServerSignalSender<T> {
 		return new ServerSignalSender(description, new InstanceFactory(), parent);
 	}
@@ -49,25 +47,19 @@ export class ServerSignalSender<T extends NetworkedSignalCallback | NetworkedSig
 		this.remoteEvent.Destroy();
 	}
 
-	public fireToPlayer(player: Player, ...args: FunctionArguments<GetNetworkedSignalCallbackType<T>>) {
+	public fireToPlayer(player: Player, ...args: Parameters<T>) {
 		this.remoteEvent.FireClient(player, ...args);
 	}
 
-	public fireToAll(...args: FunctionArguments<GetNetworkedSignalCallbackType<T>>) {
+	public fireToAll(...args: Parameters<T>) {
 		this.remoteEvent.FireAllClients(...args);
 	}
 
-	public fireToWhitelist(
-		playersWhitelist: ReadonlyArray<Player>,
-		...args: FunctionArguments<GetNetworkedSignalCallbackType<T>>
-	) {
+	public fireToWhitelist(playersWhitelist: ReadonlyArray<Player>, ...args: Parameters<T>) {
 		playersWhitelist.forEach(player => this.remoteEvent.FireClient(player, ...args));
 	}
 
-	public fireToOthers(
-		playersBlacklist: ReadonlyArray<Player>,
-		...args: FunctionArguments<GetNetworkedSignalCallbackType<T>>
-	) {
+	public fireToOthers(playersBlacklist: ReadonlyArray<Player>, ...args: Parameters<T>) {
 		const playersBlacklistSet = new Set(playersBlacklist);
 		Players.GetPlayers()
 			.filter(player => !playersBlacklistSet.has(player))

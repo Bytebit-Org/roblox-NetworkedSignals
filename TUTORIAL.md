@@ -83,11 +83,11 @@ The client-side is responsible for listening to signals from the server ("Server
 
 ```ts
 import { ReplicatedStorage } from "@rbxts/services";
-import type { ClientSignalSender, IClientSignalSender, IServerSignalListener, ServerSignalListener } from "@rbxts/networked-signals";
+import type { ClientSignalSender, GetNetworkedSignalCallbackType, IClientSignalSender, IServerSignalListener, ServerSignalListener } from "@rbxts/networked-signals";
 import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
 
-const votedForMapClientSignalSender: IClientSignalSender<typeof NetworkedSignalDescriptions.VotedForMap> = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-const voteForMapRequestedServerSignalListener: IServerSignalListener<typeof NetworkedSignalDescriptions.VoteForMapRequested> = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+const votedForMapClientSignalSender: IClientSignalSender<GetNetworkedSignalCallbackType<typeof NetworkedSignalDescriptions.VotedForMap>> = ClientSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+const voteForMapRequestedServerSignalListener: IServerSignalListener<GetNetworkedSignalCallbackType<typeof NetworkedSignalDescriptions.VoteForMapRequested>> = ServerSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 mapVoteRequestedServerSignalListener.connect(() => {
     // Show the options and let the player select one
@@ -132,11 +132,11 @@ The server-side is responsible for listening to signals from the client ("Client
 
 ```ts
 import { ReplicatedStorage } from "@rbxts/services";
-import type { ClientSignalListener, IClientSignalListener, IServerSignalSender, ServerSignalSender } from "@rbxts/networked-signals";
+import type { ClientSignalListener, GetNetworkedSignalCallbackType, IClientSignalListener, IServerSignalSender, ServerSignalSender } from "@rbxts/networked-signals";
 import { NetworkedSignalDescriptions } from "ReplicatedStorage/NetworkedSignalDescriptions";
 
-const votedForMapClientSignalListener: IClientSignalListener<typeof NetworkedSignalDescriptions.VotedForMap> = ClientSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
-const voteForMapRequestedServerSignalSender: IServerSignalSender<typeof NetworkedSignalDescriptions.VoteForMapRequested> = ServerSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
+const votedForMapClientSignalListener: IClientSignalListener<GetNetworkedSignalCallbackType<typeof NetworkedSignalDescriptions.VotedForMap>> = ClientSignalListener.create(ReplicatedStorage, NetworkedSignalDescriptions.VotedForMap);
+const voteForMapRequestedServerSignalSender: IServerSignalSender<GetNetworkedSignalCallbackType<typeof NetworkedSignalDescriptions.VoteForMapRequested>> = ServerSignalSender.create(ReplicatedStorage, NetworkedSignalDescriptions.VoteForMapRequested);
 
 votedForMapClientSignalListener.connect((player, mapName) => {
     // Handle the vote

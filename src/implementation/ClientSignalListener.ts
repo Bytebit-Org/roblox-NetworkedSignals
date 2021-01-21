@@ -8,17 +8,15 @@ import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
 import { checkMiddlewareFuncsAsync } from "../functions/checkMiddlewareFuncsAsync";
 import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
 import { InstanceFactory } from "../factories/InstanceFactory";
-import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 const IS_STUDIO = RunService.IsStudio();
 
-export class ClientSignalListener<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
-	implements IClientSignalListener<T> {
+export class ClientSignalListener<T extends NetworkedSignalCallback = () => void> implements IClientSignalListener<T> {
 	private readonly middlewareFuncs?: ReadonlyArray<MiddlewareFunc<ClientSignalListenerMiddlewarePayload<T>>>;
 	private readonly minNumberOfArguments: number;
 	private readonly name: string;
 	private readonly remoteEvent: RemoteEvent;
-	private readonly typeChecks: ArgumentsTupleTypesCheck<GetNetworkedSignalCallbackType<T>>;
+	private readonly typeChecks: ArgumentsTupleTypesCheck<T>;
 
 	/**
 	 * Use create method instead!
@@ -59,32 +57,17 @@ export class ClientSignalListener<T extends NetworkedSignalCallback | NetworkedS
 	 * @param parent The parent Instance holding the networked event
 	 * @param description The description for the networked event
 	 */
-	public static create<T extends NetworkedSignalCallback | NetworkedSignalDescription>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 	): IClientSignalListener<T> {
 		return new ClientSignalListener(description, new InstanceFactory(), parent);
 	}
 
-	public connect(callback: PrependPlayerArgToFunc<GetNetworkedSignalCallbackType<T>>) {
+	public connect(callback: PrependPlayerArgToFunc<T>) {
 		return this.remoteEvent.OnServerEvent.Connect(async (player: Player, ...args: Array<unknown>) => {
 			if (!this.doArgumentsSatisfyChecks(args)) {
-				if (IS_STUDIO) {
-					error(`Invalid arguments passed to client signal ${this.name}`);
-				}
-
 				return;
-			}
-
-			if (this.middlewareFuncs !== undefined) {
-				const payload: ClientSignalListenerMiddlewarePayload<T> = {
-					args: args,
-					signalName: this.name,
-					sourcePlayer: player,
-				};
-				if (!(await checkMiddlewareFuncsAsync(payload, this.middlewareFuncs))) {
-					return;
-				}
 			}
 
 			callback(player, ...args);
@@ -104,9 +87,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		}
 	}
 
-	private doArgumentsSatisfyChecks(
-		args: Array<unknown>,
-	): args is FunctionArguments<GetNetworkedSignalCallbackType<T>> {
+	private doArgumentsSatisfyChecks(args: Array<unknown>): args is Parameters<T> {
 		const numberOfArgumentsProvided = args.size();
 		if (
 			this.typeChecks.size() < numberOfArgumentsProvided ||
@@ -136,9 +117,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		return true;
 	}
 
-	private doArgumentsSatisfyChecksWithPlayerArg(
-		args: Array<unknown>,
-	): args is FunctionArguments<PrependPlayerArgToFunc<GetNetworkedSignalCallbackType<T>>> {
+	private doArgumentsSatisfyChecksWithPlayerArg(args: Array<unknown>): args is Parameters<PrependPlayerArgToFunc<T>> {
 		if (!t.instanceIsA("Player")(args[0])) {
 			return false;
 		}

@@ -6,16 +6,14 @@ import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription"
 import { waitForNamedChildWhichIsA } from "../functions/WaitForNamedChildWhichIsA";
 import { MiddlewareFunc, ServerSignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
 import { checkMiddlewareFuncsAsync } from "../functions/checkMiddlewareFuncsAsync";
-import { GetNetworkedSignalCallbackType } from "../types/GetNetworkedSignalCallbackType";
 
 const IS_STUDIO = RunService.IsStudio();
 
-export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedSignalDescription = () => void>
-	implements IServerSignalListener<T> {
+export class ServerSignalListener<T extends NetworkedSignalCallback = () => void> implements IServerSignalListener<T> {
 	private readonly middlewareFuncs?: ReadonlyArray<MiddlewareFunc<ServerSignalListenerMiddlewarePayload<T>>>;
 	private readonly minNumberOfArguments: number;
 	private readonly name: string;
-	private readonly typeChecks: ArgumentsTupleTypesCheck<GetNetworkedSignalCallbackType<T>>;
+	private readonly typeChecks: ArgumentsTupleTypesCheck<T>;
 	private readonly shouldCheckInboundArgumentTypes: boolean;
 
 	private remoteEvent?: RemoteEvent;
@@ -52,7 +50,7 @@ export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedS
 	 * @param description The description for the networked event
 	 * @param shouldCheckInboundArgumentTypes An optional parameter that describes whether all arguments should be type checked. Defaults to true.
 	 */
-	public static create<T extends NetworkedSignalCallback | NetworkedSignalDescription>(
+	public static create<T extends NetworkedSignalCallback>(
 		parent: Instance,
 		description: NetworkedSignalDescription<T>,
 		shouldCheckInboundArgumentTypes?: boolean,
@@ -60,7 +58,7 @@ export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		return new ServerSignalListener(parent, description, shouldCheckInboundArgumentTypes);
 	}
 
-	public connect(callback: GetNetworkedSignalCallbackType<T>): RBXScriptConnection {
+	public connect(callback: T): RBXScriptConnection {
 		if (this.remoteEvent === undefined) {
 			throw `Cannot connect to destroyed ServerSignalListener`;
 		}
@@ -92,7 +90,7 @@ export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		this.remoteEvent = undefined;
 	}
 
-	public wait() {
+	public wait(): Parameters<T> {
 		if (this.remoteEvent === undefined) {
 			throw `Cannot wait for destroyed ServerSignalListener`;
 		}
@@ -105,7 +103,7 @@ export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		}
 	}
 
-	private areArgumentsValid(args: Array<unknown>): args is FunctionArguments<GetNetworkedSignalCallbackType<T>> {
+	private areArgumentsValid(args: Array<unknown>): args is Parameters<T> {
 		// Yes, this is basically just a type assertion for TypeScript if this.shouldCheckInboundArgumentTypes is false
 		// That's okay - this is client side and is checking arguments from the server, so it should be safe
 		if (!this.shouldCheckInboundArgumentTypes || this.doArgumentsSatisfyChecks(args)) {
@@ -120,9 +118,7 @@ export class ServerSignalListener<T extends NetworkedSignalCallback | NetworkedS
 		return false;
 	}
 
-	private doArgumentsSatisfyChecks(
-		args: Array<unknown>,
-	): args is FunctionArguments<GetNetworkedSignalCallbackType<T>> {
+	private doArgumentsSatisfyChecks(args: Array<unknown>): args is Parameters<T> {
 		const numberOfArgumentsProvided = args.size();
 		if (
 			this.typeChecks.size() < numberOfArgumentsProvided ||
