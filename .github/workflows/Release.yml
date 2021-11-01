@@ -19,8 +19,6 @@ jobs:
         run: npm i -g roblox-ts
       - name: install local npm packages
         run: npm i --production=false
-      - name: compile typescript code for package
-        run: rbxtsc --type=package
       - name: publish to npm
         run: npm publish
         env:
