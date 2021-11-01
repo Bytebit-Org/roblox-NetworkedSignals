@@ -25,3 +25,6 @@ New versions of the asset are uploaded with every release. The asset can be adde
 ## Helpful Links
 - [Documentation](DOCUMENTATION.md)
 - [Tutorial](TUTORIAL.md)
+
+# Why is this still version 0.x?
+Because this package does not yet have thorough unit testing, it cannot really be trusted to be a 1.x release. Once thorough unit testing is added, then this package can have a high enough degree of trust to release version 1.0.0!
