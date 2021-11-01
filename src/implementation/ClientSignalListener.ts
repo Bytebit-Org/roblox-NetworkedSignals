@@ -5,7 +5,6 @@ import { ArgumentsTupleTypesCheck } from "../types/ArgumentsTupleTypesCheck";
 import { NetworkedSignalDescription } from "../types/NetworkedSignalDescription";
 import t from "@rbxts/t";
 import { PrependPlayerArgToFunc } from "../types/PrependPlayerArgToFunc";
-import { checkMiddlewareFuncsAsync } from "../functions/checkMiddlewareFuncsAsync";
 import { MiddlewareFunc, ClientSignalListenerMiddlewarePayload } from "../types/MiddlewareTypes";
 import { InstanceFactory } from "../factories/InstanceFactory";
 
@@ -78,7 +77,7 @@ export class ClientSignalListener<T extends NetworkedSignalCallback = () => void
 		this.remoteEvent.Destroy();
 	}
 
-	public wait() {
+	public wait(): Parameters<PrependPlayerArgToFunc<T>> {
 		while (true) {
 			const waitResults = this.remoteEvent.OnServerEvent.Wait();
 			if (this.doArgumentsSatisfyChecksWithPlayerArg(waitResults)) {
