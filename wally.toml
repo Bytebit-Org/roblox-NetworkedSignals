@@ -1,0 +1,9 @@
+[package]
+name = "bytebit/networked-signals"
+description = "A simple wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game, written in roblox-ts."
+version = "0.0.6"
+license = "MIT"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
