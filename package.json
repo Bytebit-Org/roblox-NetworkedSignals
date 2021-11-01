@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/networked-signals",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"description": "A TypeScript wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game.",
 	"main": "out/init.lua",
 	"scripts": {
@@ -11,7 +11,11 @@
 	],
 	"keywords": [],
 	"author": "Bytebit",
-	"license": "ISC",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Bytebit-Org/roblox-NetworkedSignals/issues"
+	},
+	"homepage": "https://github.com/Bytebit-Org/roblox-NetworkedSignals#readme",
 	"publishConfig": {
 		"access": "public"
 	},
