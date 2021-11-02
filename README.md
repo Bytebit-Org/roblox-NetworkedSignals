@@ -11,7 +11,7 @@ npm i @rbxts/networked-signals
 ### Wally
 [Wally](https://github.com/UpliftGames/wally/) users can install this package by adding the following line to their `Wally.toml` under `[dependencies]`:
 ```
-FiniteStateMachine = "bytebit/networked-signals@0.0.9"
+NetworkedSignals = "bytebit/networked-signals@0.0.9"
 ```
 
 Then just run `wally install`.
