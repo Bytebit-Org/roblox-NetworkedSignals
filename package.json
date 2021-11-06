@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/networked-signals",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "A TypeScript wrapper for RemoteEvents that provides a type-safe interface for networked events in a Roblox game.",
 	"main": "out/init.lua",
 	"scripts": {
@@ -25,19 +25,22 @@
 	},
 	"types": "out/index.d.ts",
 	"devDependencies": {
-		"@rbxts/compiler-types": "^1.0.0-beta.14.1",
+		"@rbxts/compiler-types": "^1.2.7-types.0",
 		"@rbxts/types": "^1.0.546",
-		"@typescript-eslint/eslint-plugin": "^2.17.0",
-		"@typescript-eslint/parser": "^2.17.0",
-		"eslint": "^6.8.0",
-		"eslint-config-prettier": "^6.9.0",
-		"eslint-plugin-prettier": "^3.1.2",
-		"eslint-plugin-roblox-ts": "0.0.7",
-		"prettier": "^1.19.1"
+		"@typescript-eslint/eslint-plugin": "^5.2.0",
+		"@typescript-eslint/parser": "^5.2.0",
+		"eslint": "^8.1.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-roblox-ts": "^0.0.32",
+		"prettier": "^2.4.1",
+		"typedoc": "^0.22.7",
+		"typedoc-plugin-markdown": "^3.11.3",
+		"typescript": "^4.4.4"
 	},
 	"dependencies": {
 		"@rbxts/dumpster": "^1.0.8",
-		"@rbxts/signals-tooling": "^1.0.2",
+		"@rbxts/signals-tooling": "^1.0.6",
 		"@rbxts/t": "^1.2.9"
 	}
 }
